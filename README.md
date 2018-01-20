@@ -6,7 +6,7 @@ Generates a Swagger/OpenAPI specification from a Vert.x Web Router.
 
 Assuming you're using Vert.x Web, use it with your `Router`:
 
-```$java
+```java
 // your normal Vert.x Web Router
 Router router = Router.router(vertx);
 
@@ -15,10 +15,29 @@ router.post("/users").handler( routingContext -> { /* etc... */ });
 router.get("/users/:userId").handler( routingContext -> { /* etc... */ });
 
 // publish the Swagger/OpenAPI specification
-RouterSpecGenerator.publishApiDocs(router, "/api/_spec");
+RouterSpecGenerator.publishApiDocs(router, "/api/spec");
 ```
 
-In this example, the specification is published to `/api/_spec`.
+In this example, the specification is published to `/api/spec`.
+
+Example specification:
+
+```yaml
+openapi: "3.0.1"
+info:
+  title: "Vert.x APIs"
+  description: "This specification was generated from a Vert.x Web Router."
+paths:
+  /users:
+    post:
+      parameters: []
+  /users/{userId}:
+    get:
+      parameters:
+      - name: "userId"
+        required: true
+        allowEmptyValue: false
+```
 
 ## Limitations
 

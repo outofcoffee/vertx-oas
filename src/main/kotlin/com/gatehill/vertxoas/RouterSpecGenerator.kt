@@ -2,17 +2,35 @@ package com.gatehill.vertxoas
 
 import com.gatehill.vertxoas.service.OpenApiServiceImpl
 import io.swagger.util.Json
+import io.swagger.util.Yaml
 import io.vertx.ext.web.Router
 
 object RouterSpecGenerator {
+    private val contentTypeHeader = "Content-Type"
     private val openApiService by lazy { OpenApiServiceImpl() }
 
     fun publishApiDocs(router: Router, path: String) {
         val spec = openApiService.buildSpecification(router, "/")
-        val serialisedSpec = Json.pretty(spec)
+        val jsonSpec by lazy { Json.pretty(spec) }
+        val yamlSpec by lazy { Yaml.pretty().writeValueAsString(spec) }
 
+        router.get(path + ".json").handler { routingContext ->
+            routingContext.response()
+                    .putHeader(contentTypeHeader, "application/json")
+                    .end(jsonSpec)
+        }
+        router.get(path + ".yaml").handler { routingContext ->
+            routingContext.response()
+                    .putHeader(contentTypeHeader, "application/x-yaml")
+                    .end(yamlSpec)
+        }
+
+        // default redirect
         router.get(path).handler { routingContext ->
-            routingContext.response().end(serialisedSpec)
+            routingContext.response()
+                    .putHeader("Location", "$path.yaml")
+                    .setStatusCode(302)
+                    .end()
         }
     }
 }
