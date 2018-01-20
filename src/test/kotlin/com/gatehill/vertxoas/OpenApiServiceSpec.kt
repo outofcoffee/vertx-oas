@@ -22,7 +22,7 @@ object OpenApiServiceSpec : Spek({
     describe("an Open API service") {
         val service = OpenApiServiceImpl()
 
-        on("generate") {
+        on("processing non-empty routes") {
             val router = Router.router(Vertx.vertx()).apply {
                 post("/users").handler({})
                 get("/users/:userId").handler({})
@@ -55,6 +55,19 @@ object OpenApiServiceSpec : Spek({
                 params.first().name `should equal` "userId"
                 params.first().required.`should be true`()
                 params.first().allowEmptyValue.`should be false`()
+            }
+        }
+
+        on("processing empty route") {
+            val router = Router.router(Vertx.vertx()).apply {
+                post().handler({})
+            }
+
+            val spec = service.buildSpecification(router, "/")
+
+            it("ignores empty route") {
+                spec.paths.`should not be null`()
+                spec.paths.`should be empty`()
             }
         }
     }

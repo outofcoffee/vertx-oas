@@ -12,6 +12,7 @@ import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.impl.RouteImpl
 import org.apache.logging.log4j.LogManager
+import java.util.Objects.nonNull
 
 /**
  * @author Pete Cornish &lt;outofcoffee@gmail.com&gt;
@@ -37,7 +38,7 @@ class OpenApiServiceImpl : OpenApiService {
         val description = StringBuilder()
                 .append("This specification was generated from a Vert.x Web Router.")
 
-        router.routes.forEach { route ->
+        router.routes.filter { nonNull(it.path) }.forEach { route ->
             val splitPath = route.path.split("/")
 
             val convertedPath = splitPath.joinToString("/") {
