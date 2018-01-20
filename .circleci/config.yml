@@ -1,0 +1,12 @@
+---
+version: 2
+jobs:
+  build:
+    docker:
+    - image: openjdk:8
+
+    steps:
+    - checkout
+    - run:
+        name: Build and deploy
+        command: ./gradlew clean build publish -Pversion=${CIRCLE_SHA1:0:7} --stacktrace

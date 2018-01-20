@@ -1,0 +1,106 @@
+group = 'com.gatehill.vertx-oas'
+version = project.findProperty('version') ?: '0.0.1-SNAPSHOT'
+
+buildscript {
+    ext {
+        ext.mavenSnapshotRepository = 's3://gatehillsoftware-maven/snapshots'
+        ext.awsAccessKey = System.getenv('AWS_ACCESS_KEY_ID') ?: project.findProperty('AWS_ACCESS_KEY_ID')
+        ext.awsSecretKey = System.getenv('AWS_SECRET_ACCESS_KEY') ?: project.findProperty('AWS_SECRET_ACCESS_KEY')
+
+        version_kotlin = '1.2.10'
+        version_vertx = '3.5.0'
+        version_swagger_parser = '2.0.0-SNAPSHOT'
+        version_log4j = '2.9.1'
+        version_junit_platform_gradle = '1.0.0'
+        version_spek = '1.1.5'
+        version_kluent = '1.33'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:$version_junit_platform_gradle"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+junitPlatform {
+    platformVersion version_junit_platform_gradle
+    filters {
+        engines {
+            include 'spek'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    // for swagger-parser-v3 snapshot
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$version_kotlin"
+
+    compile "io.vertx:vertx-web:$version_vertx"
+    compile "io.swagger.parser.v3:swagger-parser:$version_swagger_parser"
+
+    // logging
+    compile "org.apache.logging.log4j:log4j-api:$version_log4j"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:$version_log4j"
+
+    // testing
+    testCompile "org.amshove.kluent:kluent:$version_kluent"
+    testCompile "org.jetbrains.spek:spek-api:$version_spek"
+    testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$version_spek"
+    testRuntime "org.junit.platform:junit-platform-launcher:$version_junit_platform_gradle"
+
+    testRuntime "org.apache.logging.log4j:log4j-core:$version_log4j"
+}
+
+jar {
+    archiveName "${project.name}.jar"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+
+            repositories {
+                maven {
+                    url mavenSnapshotRepository
+                    credentials(AwsCredentials) {
+                        accessKey awsAccessKey
+                        secretKey awsSecretKey
+                    }
+                }
+            }
+        }
+    }
+}
