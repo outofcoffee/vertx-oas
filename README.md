@@ -7,20 +7,22 @@ Generates a Swagger/OpenAPI specification from a Vert.x Web Router.
 Assuming you're using Vert.x Web, use it with your `Router`:
 
 ```java
-// your normal Vert.x Web Router
+// your normal Vert.x Web Router with paths etc.
 Router router = Router.router(vertx);
-
-// add paths etc.
 router.post("/users").handler( routingContext -> { /* etc... */ });
 router.get("/users/:userId").handler( routingContext -> { /* etc... */ });
 
-// publish the Swagger/OpenAPI specification
+// publish the Swagger/OpenAPI specification to a URL
 RouterSpecGenerator.publishApiDocs(router, "/api/spec");
 ```
 
 In this example, the specification is published to `/api/spec`.
 
-Example specification:
+You can obtain YAML or JSON versions of the specification by adding the appropriate file extension.
+
+---
+
+For example, fetching `http://localhost:8080/api/spec.yaml` would produce:
 
 ```yaml
 openapi: "3.0.1"
@@ -47,11 +49,43 @@ paths:
 
 ## Use in your project
 
+### Maven
+
+Add repository:
+
+```xml
+<project>
+...
+  <repositories>
+    <repository>
+      <id>gatehillsoftware-snapshots</id>
+      <name>Gatehill Software Snapshots</name>
+      <url>https://s3-eu-west-1.amazonaws.com/gatehillsoftware-maven/snapshots</url>
+    </repository>
+  </repositories>
+...
+</project>
+```
+    
+Add dependency:
+
+```xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.gatehill.vertx-oas</groupId>
+        <artifactId>vertx-oas.</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+    ...
+</dependencies>
+```
+
+### Gradle
+
 Add repository:
 
     repositories {
-        // ...etc.
-        
         maven {
             url 'https://s3-eu-west-1.amazonaws.com/gatehillsoftware-maven/snapshots'
         }
@@ -59,9 +93,11 @@ Add repository:
     
 Add dependency:
 
-    compile "com.gatehill.vertx-oas:vertx-oas:$version_vertx_oas"  
+    compile 'com.gatehill.vertx-oas:vertx-oas:1.0.0'  
 
 ## Build
+
+If you'd like to build the code locally, follow these instructions.
 
 ### Prerequisites
 

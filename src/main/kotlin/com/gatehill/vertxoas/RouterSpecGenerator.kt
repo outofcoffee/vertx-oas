@@ -6,7 +6,7 @@ import io.swagger.util.Yaml
 import io.vertx.ext.web.Router
 
 object RouterSpecGenerator {
-    private val contentTypeHeader = "Content-Type"
+    private const val contentTypeHeader = "Content-Type"
     private val openApiService by lazy { OpenApiServiceImpl() }
 
     fun publishApiDocs(router: Router, path: String) {
