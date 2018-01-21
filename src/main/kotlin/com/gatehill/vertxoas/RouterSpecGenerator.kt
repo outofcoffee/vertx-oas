@@ -9,6 +9,7 @@ object RouterSpecGenerator {
     private const val contentTypeHeader = "Content-Type"
     private val openApiService by lazy { OpenApiServiceImpl() }
 
+    @JvmStatic
     fun publishApiDocs(router: Router, path: String) {
         val spec = openApiService.buildSpecification(router, "/")
         val jsonSpec by lazy { Json.pretty(spec) }
