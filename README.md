@@ -45,11 +45,33 @@ paths:
 - Doesn't know the type of path parameters
 - Doesn't know about request or response body models
 
-## Prerequisites
+## Use in your project
+
+Add repository:
+
+    repositories {
+        // ...etc.
+        
+        maven {
+            url 'https://s3-eu-west-1.amazonaws.com/gatehillsoftware-maven/snapshots'
+        }
+    }
+    
+Add dependency:
+
+    compile "com.gatehill.vertx-oas:vertx-oas:$version_vertx_oas"  
+
+## Build
+
+### Prerequisites
 
 - JDK8
 
-## Publish
+### Compile and test
+
+    ./gradlew clean build
+
+### Publish
 
 Publish to local Maven repository:
 
@@ -58,25 +80,3 @@ Publish to local Maven repository:
 Publish to remote Maven repository:
 
     ./gradlew publish
-
-## Use in projects
-
-Add repository:
-
-    repositories {
-        // ...etc.
-        
-        maven {
-            url 's3://gatehillsoftware-maven/snapshots'
-            credentials(AwsCredentials) {
-                accessKey System.getenv('AWS_ACCESS_KEY_ID') ?: project.findProperty('AWS_ACCESS_KEY_ID')
-                secretKey System.getenv('AWS_SECRET_ACCESS_KEY') ?: project.findProperty('AWS_SECRET_ACCESS_KEY')
-            }
-        }
-    }
-    
-> Note: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` can be set as environment variables, or your `gradle.properties` file.
-
-Add dependency:
-
-    compile "com.gatehill.vertx-oas:vertx-oas:$version_vertx_oas"  
