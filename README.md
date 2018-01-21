@@ -4,7 +4,7 @@ Generates a Swagger/OpenAPI specification from a Vert.x Web Router.
 
 ## Usage
 
-Assuming you're using Vert.x Web, use it with your `Router`:
+Assuming you're using Vert.x Web, use it with your `Router` as follows:
 
 ```java
 // your normal Vert.x Web Router with paths etc.
@@ -22,7 +22,7 @@ You can obtain YAML or JSON versions of the specification by adding the appropri
 
 ---
 
-For example, fetching `http://localhost:8080/api/spec.yaml` would produce:
+For example, fetching `/api/spec.yaml` would produce:
 
 ```yaml
 openapi: "3.0.1"
@@ -124,3 +124,12 @@ Publish to local Maven repository:
 Publish to remote Maven repository:
 
     ./gradlew publish
+
+## Contributing
+
+* Pull requests are welcome.
+* Please run `ktlint` on your branch.
+
+## Author
+
+Pete Cornish (outofcoffee@gmail.com)
