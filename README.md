@@ -62,6 +62,11 @@ Add repository:
       <name>Gatehill Software Snapshots</name>
       <url>https://s3-eu-west-1.amazonaws.com/gatehillsoftware-maven/snapshots</url>
     </repository>
+    <repository>
+      <id>sonatype-snapshots</id>
+      <name>Sonatype OSS Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
   </repositories>
 ...
 </project>
@@ -74,8 +79,8 @@ Add dependency:
     ...
     <dependency>
         <groupId>com.gatehill.vertx-oas</groupId>
-        <artifactId>vertx-oas.</artifactId>
-        <version>1.0.0</version>
+        <artifactId>vertx-oas</artifactId>
+        <version>1.0.1</version>
     </dependency>
     ...
 </dependencies>
@@ -89,11 +94,14 @@ Add repository:
         maven {
             url 'https://s3-eu-west-1.amazonaws.com/gatehillsoftware-maven/snapshots'
         }
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
     }
     
 Add dependency:
 
-    compile 'com.gatehill.vertx-oas:vertx-oas:1.0.0'  
+    compile 'com.gatehill.vertx-oas:vertx-oas:1.0.1'  
 
 ## Build
 
